@@ -35,3 +35,9 @@ parts:
       - lib*
     stage-snaps:
       - dmd
+      
+  drepl-license:
+    plugin: dump
+    source: doc
+    organize:
+      license.txt: doc/license.txt 
