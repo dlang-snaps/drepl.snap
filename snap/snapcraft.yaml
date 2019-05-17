@@ -1,0 +1,37 @@
+name: drepl-erny
+version: 0.2.1
+summary: A REPL for D
+description: |
+    The drepl, is a cross platform tool for run dlang code like a shell. 
+confinement: classic
+base: core
+grade: stable
+
+apps:
+  drepl:
+    command: env LD_LIBRARY_PATH=$SNAP/lib64:$SNAP/lib32 $SNAP/bin/drepl
+
+parts:
+  drepl:
+    source: https://github.com/dlang-community/drepl.git
+    source-tag: v0.2.1
+    source-type: git
+    #probably it would be nice to replace it with a specific dub plugin.
+    plugin: dump 
+    override-build : |
+      snapcraftctl build
+      /snap/bin/dub build -b release --compiler=/snap/bin/dmd --force
+      mkdir "$SNAPCRAFT_PART_INSTALL/bin"
+      cp drepl "$SNAPCRAFT_PART_INSTALL/bin"
+    stage:
+      - bin/drepl
+    build-snaps:
+      - dmd
+      - dub
+      
+  phobos-shared:
+    plugin: nil
+    stage:
+      - lib*
+    stage-snaps:
+      - dmd
